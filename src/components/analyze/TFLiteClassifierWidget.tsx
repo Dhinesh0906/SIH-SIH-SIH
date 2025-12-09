@@ -19,7 +19,7 @@ export const TFLiteClassifierWidget: React.FC = () => {
         classifierRef.current = clf;
         await clf.initialize({
           labelsUrl: "/models/species.json",
-          modelUrl: "/models/fish_species_40_float32.tflite",
+          // Use default model path (/best_float32.tflite)
         });
         setReady(true);
       } catch (e: any) {
