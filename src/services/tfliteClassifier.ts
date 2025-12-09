@@ -46,13 +46,15 @@ export class TFLiteClassifier {
     } catch {}
     if (!this.labels.length) throw new Error("Labels not loaded. Ensure /species_labels.json exists and is accessible.");
 
-    // Load model; try public/models first, then root fallback
+    // Load model with absolute path
     const modelUrl = options?.modelUrl ?? BEST_MODEL_PATH;
+    const absoluteModelUrl = modelUrl.startsWith('/') ? modelUrl : `/${modelUrl}`;
     try {
-      this.model = await window.tflite!.loadTFLiteModel(modelUrl, { enableWebXnnpack: false });
+      console.debug('[Classifier] Loading model from:', absoluteModelUrl);
+      this.model = await window.tflite!.loadTFLiteModel(absoluteModelUrl, { enableWebXnnpack: false });
       if (this.model) return;
     } catch (e: any) {
-      throw new Error(`Failed to load TFLite model at ${modelUrl}: ${e?.message || e}`);
+      throw new Error(`Failed to load TFLite model at ${absoluteModelUrl}: ${e?.message || e}`);
     }
   }
 
@@ -135,12 +137,16 @@ export class TFLiteClassifier {
     if (window.tflite) return;
     // Prime the native TFLite C++ Web API to ensure wasm path resolution works in prod
     try {
-      await loadTFLiteModule();
-    } catch {}
+      const nativeModule = await loadTFLiteModule();
+      console.debug('[Classifier] Native TFLite module initialized:', nativeModule);
+    } catch (e) {
+      console.warn('[Classifier] Native TFLite module init failed:', e);
+    }
     // Load the TFJS TFLite compatibility layer used by current classifier
     await loadScript("/tflite/tf-tflite.min.js");
     if (!window.tflite) throw new Error("Failed to load TFLite Web runtime");
     // Force absolute public path for wasm assets
+    console.debug('[Classifier] Setting wasm path to /tflite/');
     window.tflite.setWasmPath?.("/tflite/");
   }
 

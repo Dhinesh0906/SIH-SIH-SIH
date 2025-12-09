@@ -2,9 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Preload TFLite native C++ Web API with absolute path -->
+    <script>
+      // Set wasm path BEFORE loading the runtime
+      if (typeof Module === 'undefined') {
+        var Module = {
+          locateFile: function(path) {
+            console.debug('[init] Locating:', path, '-> /tflite/' + path);
+            return '/tflite/' + path;
+          },
+          noExitRuntime: true
+        };
+      }
+    </script>
+    <script src="/tflite/tflite_web_api_cc_simd.js"></script>
     <script src="/tflite/tf.min.js"></script> 
-  
-  <script src="/tflite/tf-tflite.min.js"></script>
+    <script src="/tflite/tf-tflite.min.js"></script>
     <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#0ea5e9" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

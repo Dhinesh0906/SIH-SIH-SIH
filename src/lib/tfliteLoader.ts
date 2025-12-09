@@ -20,10 +20,15 @@ export async function loadTFLiteModule(): Promise<TFLiteModule> {
   }
   // Initialize the module with absolute wasm locator for Vercel
   const module = await factory({
-    locateFile: (path: string) => `/tflite/${path}`,
+    locateFile: (path: string) => {
+      const absolutePath = `/tflite/${path}`;
+      console.debug('[TFLite] Locating wasm:', path, '=>', absolutePath);
+      return absolutePath;
+    },
     noExitRuntime: true,
   });
   return module;
 }
 
+// Ensure model path is absolute and correct
 export const BEST_MODEL_PATH = '/best_float32.tflite';
