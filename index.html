@@ -8,6 +8,11 @@
       if (typeof Module === 'undefined') {
         var Module = {
           locateFile: function(path) {
+            // Redirect wasm requests to simplified filename
+            if (path.endsWith('.wasm')) {
+              console.debug('[init] WASM request:', path, '-> /tflite/wasm.bin');
+              return '/tflite/wasm.bin';
+            }
             console.debug('[init] Locating:', path, '-> /tflite/' + path);
             return '/tflite/' + path;
           },

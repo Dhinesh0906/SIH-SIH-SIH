@@ -21,8 +21,14 @@ export async function loadTFLiteModule(): Promise<TFLiteModule> {
   // Initialize the module with absolute wasm locator for Vercel
   const module = await factory({
     locateFile: (path: string) => {
+      // Redirect all wasm to simplified filename
+      if (path.endsWith('.wasm')) {
+        const absolutePath = '/tflite/wasm.bin';
+        console.debug('[TFLite] WASM:', path, '=>', absolutePath);
+        return absolutePath;
+      }
       const absolutePath = `/tflite/${path}`;
-      console.debug('[TFLite] Locating wasm:', path, '=>', absolutePath);
+      console.debug('[TFLite] Locating:', path, '=>', absolutePath);
       return absolutePath;
     },
     noExitRuntime: true,

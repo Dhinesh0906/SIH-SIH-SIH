@@ -138,9 +138,9 @@ export class TFLiteClassifier {
     // Prime the native TFLite C++ Web API to ensure wasm path resolution works in prod
     try {
       const nativeModule = await loadTFLiteModule();
-      console.debug('[Classifier] Native TFLite module initialized:', nativeModule);
+      console.debug('[Classifier] Native TFLite module initialized');
     } catch (e) {
-      console.warn('[Classifier] Native TFLite module init failed:', e);
+      console.warn('[Classifier] Native TFLite module init failed (expected if using tfjs-tflite):', e);
     }
     // Load the TFJS TFLite compatibility layer used by current classifier
     await loadScript("/tflite/tf-tflite.min.js");
