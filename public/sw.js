@@ -10,6 +10,10 @@ const STATIC_ASSETS = [
   '/manifest.json',
   '/favicon.ico',
   '/placeholder.svg',
+  // TFLite runtime + model (ensure correct caching and MIME)
+  '/tflite/tflite_web_api_cc_simd.js',
+  '/tflite/tflite_web_api_cc_simd.wasm',
+  '/best_float32.tflite',
   '/news/local-news.json',
   '/models/species.json',
   '/models/model.tflite',
